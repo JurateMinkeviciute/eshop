@@ -1,0 +1,51 @@
+﻿@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@model IPagedList<WebCoreProject.Models.Phone>
+
+@{
+    ViewData["Title"] = "List Of Phones";
+}
+
+<h1 style="text-align:center">List Of Phones</h1>
+<hr />
+<div class="mb-2 mt-2">
+    <a asp-controller="Phones" asp-action="CreatePhone" class="btn btn-primary mb-3" style="width:auto">Add Product</a>
+</div>
+<div class="row">
+    @foreach (var phone in Model)
+    {
+        var photoPath = "/images/" + (phone.PhotoPath ?? "love.jpg");
+        <div class="col-lg-3 col-sm-4 mt-5">
+            <figure class="card card-product">
+                <div class="img-wrap m-1"><img src="@photoPath"></div>
+                <div class="product-item-badge">
+                    <p>New</p>
+                </div>
+                <figcaption class="info-wrap">
+                    <h4 class="title">@phone.Model</h4>
+                    <p class="desc">@phone.Description.Substring(0, 45)...</p>
+                </figcaption>
+                <div class="bottom-wrap">
+                    <a href="" class="btn btn-sm btn-primary float-right" disabled="disabled"><i class="fa fa-shopping-basket"></i> Order Now</a>
+                    <div class="price-wrap h5">
+                        <span class="price-new">@phone.Price</span> <del class="price-old">@(phone.OldPrice == null ? null : phone.OldPrice) </del>
+                    </div> <!-- price-wrap.// -->
+                    <div class="mt-4">
+                        <a asp-controller="Phones" asp-action="ViewPhone" asp-route-id="@phone.Id" class="btn btn-primary">View</a>
+                        <a asp-controller="Phones" asp-action="EditPhone" asp-route-id="@phone.Id" class="btn btn-primary">Edit</a>
+                        <a asp-controller="Phones" asp-action="DeletePhone" asp-route-id="@phone.Id" class="btn btn-danger">Delete</a>
+                    </div>
+                </div> <!-- bottom-wrap.// -->
+            </figure>
+        </div> <!-- col // -->
+    }
+</div>
+
+<div id="container" style="margin-left: 20px">
+    <p></p>
+    <p></p>
+    <div class="pagination" style="margin-left: 400px">
+        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount   
+        @Html.PagedListPager(Model, page => Url.Action("ListPhones", new { page }))
+    </div>
+</div>

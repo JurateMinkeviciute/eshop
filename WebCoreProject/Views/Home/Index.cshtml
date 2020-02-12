@@ -1,0 +1,114 @@
+﻿@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@model IPagedList<WebCoreProject.Models.Phone>
+
+@{
+    ViewBag.Title = "Employee List";
+}
+<div id="themeSlider" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+        <li data-target="#themeSlider" data-slide-to="0" class="active"></li>
+        <li data-target="#themeSlider" data-slide-to="1"></li>
+        <li data-target="#themeSlider" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+        <div class="item active">
+            <div class="imgOverlay"></div>
+            <img style="height:320px; width:100%" src="~/images/img1.jpg" alt="First slide">
+            <div class="carousel-caption">
+                <h3></h3>
+            </div>
+        </div>
+        <div class="item">
+            <div class="imgOverlay"></div>
+            <img style="height:320px; width:100%" src="~/images/img2.jpg" alt="Second slide">
+            <div class="carousel-caption">
+                <h3></h3>
+            </div>
+        </div>
+        <div class="item">
+            <div class="imgOverlay"></div>
+            <img style="height:320px; width:100%" src="~/images/img3.jpg" alt="Third slide">
+            <div class="carousel-caption">
+                <h3></h3>
+            </div>
+        </div>
+    </div>
+    <a class="left carousel-control" href="#themeSlider" data-slide="prev">
+        <span class="fa fa-chevron-left"></span>
+    </a>
+    <a class="right carousel-control" href="#themeSlider" data-slide="next">
+        <span class="fa fa-chevron-right"></span>
+    </a>
+</div>
+<div class="row">
+    @foreach (var phone in Model)
+    {
+        var photoPath = "/images/" + (phone.PhotoPath ?? "love.jpg");
+        <div class="col-lg-3 col-sm-4 mt-5">
+            <figure class="card card-product">
+                <div class="product-item-badge">
+                    <p>New</p>
+                </div>
+                <div class="img-wrap m-1">
+                    <a asp-controller="Home" asp-action="ViewPhone" asp-route-id="@phone.Id">
+                        <img src="@photoPath">
+                    </a>
+                </div>
+                <div class="product-item-badge">
+                    <p>New</p>
+                </div>
+                <figcaption class="info-wrap">
+                    <a asp-controller="Home" asp-action="ViewPhone" asp-route-id="@phone.Id">
+                        <h4 class="title">@phone.DisplayName</h4>
+                    </a>
+                    <p style="font-size: 12px;" class="desc">@phone.Description.Substring(0, 45)...</p>
+                </figcaption>
+                <div class="bottom-wrap">
+                    <a asp-controller="Home" asp-action="AddToCart" asp-route-id="@phone.Id" asp-route-quantity="1" class="btn btn-sm btn-primary float-right"><i class="fa fa-shopping-basket"></i> Order Now</a>
+                    <div class="price-wrap h5">
+                        <span class="price-new">$@phone.Price</span> <del class="price-old">@(phone.OldPrice == null ? null : "$" + phone.OldPrice) </del>
+                    </div> <!-- price-wrap.// -->
+                </div> <!-- bottom-wrap.// -->
+            </figure>
+        </div> <!-- col // -->
+    }
+</div>
+
+    <div id="container" style="margin-left: 20px">
+        <p></p>
+        <p></p>
+        <div class="pagination" style="margin-left: 400px">
+            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+            of @Model.PageCount   @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+        </div>
+    </div>
+
+
+    @*<div class="card-deck">
+            @foreach (var employee in Model)
+            {
+                var photoPath = "~/images/" + (employee.PhotoPath ?? "love.jpg");
+                <div class="card m-3" style="min-width: 18rem; max-width:30.5%;">
+                    <div class="card-header">
+                        <h3>@employee.Name</h3>
+                    </div>
+                    <img class="card-img-top imageThumbnail" src="@photoPath" asp-append-version="true" />
+                    <div class="card-footer text-center">
+                        <a asp-controller="Home" asp-action="Details" asp-route-id="@employee.EncrypredId" class="btn btn-primary m-1">View</a>
+                        <a asp-controller="Employees" asp-action="Edit" asp-route-id="@employee.Id" class="btn btn-primary m-1">Edit</a>
+                        <a href="#" class="btn btn-danger m-1">Delete</a>
+                    </div>
+                </div>
+            }
+        </div>*@
+
+
+    @section scripts{
+        <script>
+            $('#themeSlider').carousel({
+                interval: 7000,
+                cycle: true
+            });
+        </script>
+    }

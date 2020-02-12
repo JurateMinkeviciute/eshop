@@ -1,0 +1,65 @@
+﻿@using Microsoft.AspNetCore.Http;
+@using WebCoreProject.Utilities
+@using WebCoreProject.Models
+
+@{
+    ViewBag.Title = "Checkout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<Phone> cart = Context.Session.GetComplexData<List<Phone>>("ComplexObject");
+}
+<br />
+<h2 style="text-align:center">Checkout</h2>
+<hr />
+@if (cart == null)
+{
+    <div class="alert alert-danger">
+        <strong>No product added to cart!</strong>
+    </div>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                decimal Total = 0;
+            }
+            @foreach (Phone item in cart)
+            {
+                decimal price = (decimal)@item.Price;
+                decimal lineTotal = @item.Quantity * price;
+                Total += lineTotal;
+                <tr>
+                    <td>@item.DisplayName</td>
+                    <td>@item.Price</td>
+                    <td>@item.Quantity</td>
+                    <td>@lineTotal</td>
+                    <td>
+                        <a href="@Url.Action("AddToCart", "Home", new { id = item.Id @*, Url = "Checkout"*@ })">
+                            <i class="fa fa-plus"></i>
+                        </a>
+                        <a href="@Url.Action("DecreaseQty", "Home", new { id = item.Id })">
+                            <i class="fa fa-minus"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        @{
+            <tr>
+                <td colspan="5" class="text-right" style="font-size:130%"><b>Total Price: @Total</b></td>
+            </tr>
+        }
+    </table>
+    <div class="row">
+        <a class="btn btn-success col-6" style="margin-left:auto; margin-right:auto; color:white">Payment >></a>
+    </div>  
+ }
